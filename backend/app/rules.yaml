@@ -1,0 +1,26 @@
+# Approval routing rules — data, not code.
+# Add a new workflow (e.g. vendor_approval) by adding a key here; the engine needs no changes.
+
+event_approval:
+  - if: "budget <= 10000"
+    route: [faculty_advisor, hod]
+  - if: "budget > 10000 and budget <= 50000"
+    route: [faculty_advisor, hod, dean_swo]
+  - if: "budget > 50000"
+    route: [faculty_advisor, hod, dean_swo, director]
+
+budget:
+  - if: "budget <= 10000"
+    route: [faculty_advisor, hod]
+  - if: "budget > 10000 and budget <= 50000"
+    route: [faculty_advisor, hod, dean_swo]
+  - if: "budget > 50000"
+    route: [faculty_advisor, hod, dean_swo, director]
+
+travel_grant:
+  - if: "always"
+    route: [faculty_advisor, hod, dean_rd]
+
+lab_access:
+  - if: "always"
+    route: [faculty_advisor, hod]
