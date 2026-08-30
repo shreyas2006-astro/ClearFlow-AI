@@ -7,9 +7,6 @@ dynamically routes them through the correct approval hierarchy, tracks SLAs, and
 maintains a tamper-evident audit trail — designed to plug into NITK's existing
 **IRIS** portal rather than replace it.
 
-Full build plan, day-by-day schedule, rule engine design, and API spec:
-see [`docs/build_documentation.md`](docs/build_documentation.md).
-
 ---
 
 ## Repo structure
@@ -47,9 +44,6 @@ python -m venv venv
 source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# set your LLM API key before running extraction
-export ANTHROPIC_API_KEY=your_key_here     # or OPENAI_API_KEY, see extraction.py
-
 # run backend
 uvicorn backend.app.main:app --reload --port 8000
 # Swagger UI at http://localhost:8000/docs
@@ -62,8 +56,7 @@ streamlit run frontend/streamlit_app.py
 
 | Role | Owns |
 |---|---|
-| AI/ML lead | `backend/app/extraction.py`, sample docs, prompt design |
-| Backend lead | `backend/app/models.py`, `rule_engine.py`, `routers/requests.py` |
-| Frontend lead | `frontend/streamlit_app.py`, `auth_stub.py` |
+| AI/ML Leads | `backend/app/extraction.py`, sample docs, prompt design |
+| Backend Leads | `backend/app/models.py`, `rule_engine.py`, `routers/requests.py` |
+| Frontend Leads | `frontend/streamlit_app.py`, `auth_stub.py` |
 
-See `docs/build_documentation.md` §9 for the full day-by-day plan and §10 for the demo script.
