@@ -3,9 +3,9 @@ import { useAuth } from "../components/AuthContext";
 
 export default function Queue() {
   const { user } = useAuth();
-  const [requests, setRequests] = useState<any[]>([]);
+  const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notes, setNotes] = useState<{ [key: number]: string }>({});
+  const [notes, setNotes] = useState({});
 
   const fetchQueue = async () => {
     if (!user) {
@@ -18,13 +18,11 @@ export default function Queue() {
       if (res.ok) {
         const allReqs = await res.json();
         
-        // Filter requests awaiting current user
         const awaiting = [];
         for (const req of allReqs) {
           const steps = req.approval_steps;
           const idx = req.current_stage_index;
           if (idx < steps.length && steps[idx].stakeholder_role === user.role && req.status === "pending") {
-            // Fetch SLA status
             const slaRes = await fetch(`http://localhost:8000/requests/${req.id}/sla_status`);
             let sla = null;
             if (slaRes.ok) {
@@ -46,7 +44,7 @@ export default function Queue() {
     fetchQueue();
   }, [user]);
 
-  const handleAction = async (id: number, action: "approve" | "reject" | "send_back") => {
+  const handleAction = async (id, action) => {
     if (!user) return;
     
     const payload = {
@@ -62,7 +60,6 @@ export default function Queue() {
       });
 
       if (res.ok) {
-        // Remove from queue
         fetchQueue();
       } else {
         alert("Action failed");

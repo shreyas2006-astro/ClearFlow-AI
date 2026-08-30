@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useAuth } from "../components/AuthContext";
 
 export default function Home() {
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const { user } = useAuth();
 
-  const handleUpload = async (e: React.FormEvent) => {
+  const handleUpload = async (e) => {
     e.preventDefault();
     if (!file) return;
 
@@ -95,7 +95,7 @@ export default function Home() {
           <div className="bg-white shadow sm:rounded-lg px-4 py-5">
             <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">Routing Visualization</h3>
             <div className="flex items-center space-x-2">
-              {result.approval_steps.map((step: any, idx: number) => (
+              {result.approval_steps.map((step, idx) => (
                 <div key={idx} className="flex items-center">
                   <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-medium">
                     {step.stakeholder_role}
@@ -123,7 +123,7 @@ export default function Home() {
                 <div className="bg-orange-50 border-l-4 border-orange-400 p-4">
                   <p className="text-sm text-orange-700 font-bold">Compliance Flags:</p>
                   <ul className="list-disc pl-5 text-sm text-orange-700">
-                    {result.extracted_json.compliance_flags.map((f: string, i: number) => <li key={i}>{f}</li>)}
+                    {result.extracted_json.compliance_flags.map((f, i) => <li key={i}>{f}</li>)}
                   </ul>
                 </div>
               ) : (

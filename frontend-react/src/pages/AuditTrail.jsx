@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 export default function AuditTrail() {
-  const [requests, setRequests] = useState<any[]>([]);
-  const [selectedId, setSelectedId] = useState<string>("");
-  const [details, setDetails] = useState<any>(null);
+  const [requests, setRequests] = useState([]);
+  const [selectedId, setSelectedId] = useState("");
+  const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export default function AuditTrail() {
             <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">Routing Plan & Status</h3>
             <div className="flow-root">
               <ul className="-mb-8">
-                {details.approval_steps.map((step: any, stepIdx: number) => (
+                {details.approval_steps.map((step, stepIdx) => (
                   <li key={step.id || stepIdx}>
                     <div className="relative pb-8">
                       {stepIdx !== details.approval_steps.length - 1 ? (
@@ -95,7 +95,7 @@ export default function AuditTrail() {
           <div className="bg-white shadow sm:rounded-lg px-4 py-5">
             <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">Action Log</h3>
             <div className="space-y-4">
-              {details.audit_entries.map((entry: any, i: number) => (
+              {details.audit_entries.map((entry, i) => (
                 <div key={i} className="border-l-4 border-indigo-500 pl-3 py-1">
                   <div className="text-xs text-gray-500 mb-1">
                     {new Date(entry.timestamp).toLocaleString()}

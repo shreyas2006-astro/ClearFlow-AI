@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 
 export default function Metrics() {
-  const [data, setData] = useState<{ role: string; avg: number; count: number }[]>([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("http://localhost:8000/requests")
       .then((res) => res.json())
       .then((reqs) => {
-        const stageTimes: { [key: string]: number[] } = {};
+        const stageTimes = {};
         
-        reqs.forEach((req: any) => {
-          req.approval_steps.forEach((step: any) => {
+        reqs.forEach((req) => {
+          req.approval_steps.forEach((step) => {
             if (["approved", "rejected", "sent_back"].includes(step.status) && step.resolved_at) {
               const entered = new Date(step.entered_at.replace("Z", "+00:00")).getTime();
               const resolved = new Date(step.resolved_at.replace("Z", "+00:00")).getTime();

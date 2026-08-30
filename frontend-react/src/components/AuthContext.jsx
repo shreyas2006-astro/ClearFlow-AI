@@ -1,22 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-type User = {
-  role: string;
-  name: string;
-  token: string;
-  username: string;
-};
+const AuthContext = createContext();
 
-type AuthContextType = {
-  user: User | null;
-  login: (username: string) => Promise<void>;
-  logout: () => void;
-};
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("iris_user");
@@ -25,7 +12,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const login = async (username: string) => {
+  const login = async (username) => {
     try {
       const res = await fetch("http://localhost:8000/auth/iris_stub", {
         method: "POST",
