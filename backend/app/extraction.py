@@ -78,7 +78,23 @@ def call_llm(prompt: str) -> str:
     from google import genai
     from google.genai import errors as genai_errors
  
-    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        print("[extraction] Warning: No GEMINI_API_KEY found, using a mock response.")
+        return """
+        {
+          "event_name": "Sample Event",
+          "event_date": "2026-10-15",
+          "venue": "Main Auditorium",
+          "budget_amount": 5000,
+          "faculty_advisor": "Dr. Kamath",
+          "requesting_club": "Tech Club",
+          "request_type": "event",
+          "compliance_flags": []
+        }
+        """
+
+    client = genai.Client(api_key=api_key)
     last_error = None
  
     for model in MODEL_FALLBACK_CHAIN:
