@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../components/AuthContext";
+import FormattedDataViewer from "../components/FormattedDataViewer";
 
 export default function Home() {
   const [file, setFile] = useState(null);
@@ -117,7 +118,7 @@ export default function Home() {
             </div>
             
             <div className="bg-white shadow sm:rounded-lg px-4 py-5 space-y-4">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">Extracted JSON</h3>
+              <h3 className="text-lg font-medium leading-6 text-gray-900">Extracted Data</h3>
               
               {result.extracted_json.compliance_flags && result.extracted_json.compliance_flags.length > 0 ? (
                 <div className="bg-orange-50 border-l-4 border-orange-400 p-4">
@@ -132,9 +133,7 @@ export default function Home() {
                 </div>
               )}
 
-              <pre className="bg-gray-800 text-green-400 p-4 rounded-md overflow-x-auto text-sm">
-                {JSON.stringify(result.extracted_json, null, 2)}
-              </pre>
+              <FormattedDataViewer data={result.extracted_json} />
             </div>
           </div>
         </div>

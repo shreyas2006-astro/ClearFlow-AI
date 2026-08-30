@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import FormattedDataViewer from "../components/FormattedDataViewer";
 
 export default function AuditTrail() {
   const [requests, setRequests] = useState([]);
@@ -93,6 +94,11 @@ export default function AuditTrail() {
           </div>
 
           <div className="bg-white shadow sm:rounded-lg px-4 py-5">
+            <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">Extracted Data</h3>
+            <FormattedDataViewer data={details.extracted_json} />
+          </div>
+
+          <div className="bg-white shadow sm:rounded-lg px-4 py-5 md:col-span-2">
             <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">Action Log</h3>
             <div className="space-y-4">
               {details.audit_entries.map((entry, i) => (

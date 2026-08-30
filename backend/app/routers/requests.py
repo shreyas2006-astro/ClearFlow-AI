@@ -119,8 +119,21 @@ def send_back_request(request_id: int, action: schemas.ApprovalAction, db: Sessi
     if step:
         step.status = "sent_back"
         step.resolved_at = datetime.utcnow()
-    req.status = "revision_requested"
-    req.current_stage_index = 0
+
+    target_idx = action.target_stage_index if action.target_stage_index is not None else -1
+
+    if target_idx >= 0:
+        req.current_stage_index = target_idx
+        req.status = "pending"
+        for s in req.approval_steps:
+            if s.stage_order >= target_idx:
+                s.status = "pending"
+                s.resolved_at = None
+                s.entered_at = datetime.utcnow() # Reset SLA timer
+    else:
+        req.current_stage_index = 0
+        req.status = "revision_requested"
+
     db.add(models.AuditLog(request_id=req.id, actor_role=action.actor_role, action="sent_back", notes=action.notes))
     db.commit()
     db.refresh(req)
