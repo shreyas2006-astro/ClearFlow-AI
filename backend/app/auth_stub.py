@@ -8,6 +8,7 @@ FAKE_USERS = {
     "hod1": {"role": "hod", "name": "Dr. Shenoy"},
     "dean1": {"role": "dean_swo", "name": "Dr. Bhat"},
     "deanrd1": {"role": "dean_rd", "name": "Dr. Pai"},
+    "director1": {"role": "director", "name": "Dr. Udaykumar"},
 }
 
 

@@ -1,0 +1,9 @@
+Event Proposal
+
+Event Name: Photography Club Exhibition
+Proposed Venue: Central Library Foyer
+Proposed Date: 12th November 2026
+Estimated Budget: Rs. 5,000
+
+(Note: faculty advisor name and requesting club not mentioned in this proposal -
+intentionally left incomplete to test compliance flag detection in extraction.)
