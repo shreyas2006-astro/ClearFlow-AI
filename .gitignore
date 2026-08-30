@@ -31,3 +31,6 @@ build/
 npm-debug.log*
 
 .env
+
+# build documentation
+docs/
