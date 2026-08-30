@@ -1,7 +1,7 @@
 # Approval routing rules — data, not code.
 # Add a new workflow (e.g. vendor_approval) by adding a key here; the engine needs no changes.
 
-event_approval:
+event:
   - if: "budget <= 10000"
     route: [faculty_advisor, hod]
   - if: "budget > 10000 and budget <= 50000"

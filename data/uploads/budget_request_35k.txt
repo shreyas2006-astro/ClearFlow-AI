@@ -1,0 +1,10 @@
+NITK Surathkal - Budget Sanction Request
+
+Event Name: Techniche Coding Marathon
+Requesting Club: Computer Science Club, NITK
+Faculty Advisor: Dr. Shenoy, Department of Computer Science and Engineering
+Proposed Venue: CSE Department Computer Lab 2
+Proposed Date: 3rd November 2026
+Estimated Budget: Rs. 35,000
+Purpose: 24-hour competitive programming marathon with prizes, refreshments, and
+sponsor banners.
