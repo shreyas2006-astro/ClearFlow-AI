@@ -56,3 +56,7 @@ class ApprovalAction(BaseModel):
     actor_role: str
     notes: Optional[str] = None
     target_stage_index: Optional[int] = None
+
+class ResubmitAction(BaseModel):
+    actor_role: str
+    extracted_json: dict

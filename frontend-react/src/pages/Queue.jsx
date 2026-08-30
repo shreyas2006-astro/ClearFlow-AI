@@ -22,6 +22,11 @@ export default function Queue() {
         
         const awaiting = [];
         for (const req of allReqs) {
+          if (user.role === "student" && req.status === "revision_requested") {
+            awaiting.push({ ...req, sla: null });
+            continue;
+          }
+          
           const steps = req.approval_steps;
           const idx = req.current_stage_index;
           if (idx < steps.length && steps[idx].stakeholder_role === user.role && req.status === "pending") {
@@ -45,6 +50,34 @@ export default function Queue() {
   useEffect(() => {
     fetchQueue();
   }, [user]);
+
+  const handleResubmit = async (id, updatedJsonStr) => {
+    if (!user) return;
+    
+    let extracted_json;
+    try {
+      extracted_json = JSON.parse(updatedJsonStr);
+    } catch (e) {
+      alert("Invalid JSON format");
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:8000/requests/${id}/resubmit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ actor_role: user.role, extracted_json }),
+      });
+
+      if (res.ok) {
+        fetchQueue();
+      } else {
+        alert("Resubmit failed");
+      }
+    } catch (e) {
+      alert("Error performing action");
+    }
+  };
 
   const handleAction = async (id, action) => {
     if (!user) return;
@@ -130,43 +163,68 @@ export default function Queue() {
                      <FormattedDataViewer data={req.extracted_json} />
                    </div>
                    <div className="flex flex-col justify-end space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Notes (optional)</label>
-                        <input 
-                          type="text" 
-                          value={notes[req.id] || ""}
-                          onChange={(e) => setNotes({...notes, [req.id]: e.target.value})}
-                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-3 py-2 border"
-                          placeholder="Reason for rejection or approval notes..."
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Send Back Target</label>
-                        <select 
-                          value={targetStages[req.id] !== undefined ? targetStages[req.id] : "-1"}
-                          onChange={(e) => setTargetStages({...targetStages, [req.id]: e.target.value})}
-                          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-3 py-2 border"
-                        >
-                          <option value="-1">-- Send to Applicant --</option>
-                          {req.approval_steps.slice(0, req.current_stage_index).map((step, idx) => (
-                            <option key={idx} value={step.stage_order}>
-                              {step.stakeholder_role}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
+                      {user.role === "student" ? (
+                        <>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">Edit JSON Properties</label>
+                            <textarea 
+                              rows={10}
+                              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-3 py-2 border font-mono text-xs"
+                              defaultValue={JSON.stringify(req.extracted_json, null, 2)}
+                              id={`edit-json-${req.id}`}
+                            />
+                            <p className="text-xs text-gray-500 mt-2">
+                              Make required changes here or submit a new PDF from the home page.
+                            </p>
+                          </div>
+                          <button 
+                            onClick={() => handleResubmit(req.id, document.getElementById(`edit-json-${req.id}`).value)} 
+                            className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700"
+                          >
+                            Save & Resubmit
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">Notes (optional)</label>
+                            <input 
+                              type="text" 
+                              value={notes[req.id] || ""}
+                              onChange={(e) => setNotes({...notes, [req.id]: e.target.value})}
+                              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-3 py-2 border"
+                              placeholder="Reason for rejection or approval notes..."
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700">Send Back Target</label>
+                            <select 
+                              value={targetStages[req.id] !== undefined ? targetStages[req.id] : "-1"}
+                              onChange={(e) => setTargetStages({...targetStages, [req.id]: e.target.value})}
+                              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm px-3 py-2 border"
+                            >
+                              <option value="-1">-- Send to Applicant --</option>
+                              {req.approval_steps.slice(0, req.current_stage_index).map((step, idx) => (
+                                <option key={idx} value={step.stage_order}>
+                                  {step.stakeholder_role}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
 
-                      <div className="flex space-x-3">
-                        <button onClick={() => handleAction(req.id, "approve")} className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700">
-                          Approve
-                        </button>
-                        <button onClick={() => handleAction(req.id, "reject")} className="flex-1 bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700">
-                          Reject
-                        </button>
-                        <button onClick={() => handleAction(req.id, "send_back")} className="flex-1 bg-yellow-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-700">
-                          Send Back
-                        </button>
-                      </div>
+                          <div className="flex space-x-3">
+                            <button onClick={() => handleAction(req.id, "approve")} className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-green-700">
+                              Approve
+                            </button>
+                            <button onClick={() => handleAction(req.id, "reject")} className="flex-1 bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700">
+                              Reject
+                            </button>
+                            <button onClick={() => handleAction(req.id, "send_back")} className="flex-1 bg-yellow-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-yellow-700">
+                              Send Back
+                            </button>
+                          </div>
+                        </>
+                      )}
                    </div>
                 </div>
               </div>

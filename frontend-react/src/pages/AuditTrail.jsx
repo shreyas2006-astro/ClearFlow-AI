@@ -7,6 +7,30 @@ export default function AuditTrail() {
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const formatRole = (role) => {
+    const roles = {
+      student: "Student",
+      faculty_advisor: "Faculty Advisor",
+      hod: "HOD",
+      dean_swo: "Dean SWO",
+      dean_rd: "Dean R&D",
+      director: "Director",
+      system: "System"
+    };
+    return roles[role] || role;
+  };
+
+  const formatAction = (action) => {
+    const actions = {
+      submitted: "submitted the request",
+      approved: "approved the request",
+      rejected: "rejected the request",
+      sent_back: "sent back the request for revision",
+      resubmitted: "resubmitted the request with revised details"
+    };
+    return actions[action] || `performed ${action}`;
+  };
+
   useEffect(() => {
     fetch("http://localhost:8000/requests")
       .then((res) => res.json())
@@ -77,7 +101,7 @@ export default function AuditTrail() {
                         <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
                           <div>
                             <p className="text-sm text-gray-500">
-                              <strong className="text-gray-900">{step.stakeholder_role}</strong>{" "}
+                              <strong className="text-gray-900">{formatRole(step.stakeholder_role)}</strong>{" "}
                               {step.status}
                             </p>
                           </div>
@@ -107,7 +131,7 @@ export default function AuditTrail() {
                     {new Date(entry.timestamp).toLocaleString()}
                   </div>
                   <p className="text-sm">
-                    <strong>{entry.actor_role}</strong> performed <strong>{entry.action}</strong>
+                    <strong>{formatRole(entry.actor_role)}</strong> {formatAction(entry.action)}
                   </p>
                   {entry.notes && (
                     <p className="text-sm text-gray-600 mt-1 italic">"{entry.notes}"</p>

@@ -140,6 +140,32 @@ def send_back_request(request_id: int, action: schemas.ApprovalAction, db: Sessi
     return req
 
 
+@router.post("/{request_id}/resubmit", response_model=schemas.RequestOut)
+def resubmit_request(request_id: int, action: schemas.ResubmitAction, db: Session = Depends(get_db)):
+    req = db.query(models.Request).get(request_id)
+    if not req:
+        raise HTTPException(404, "Request not found")
+
+    if req.status != "revision_requested":
+        raise HTTPException(400, "Request is not waiting for revision")
+
+    # Update data
+    req.extracted_json = action.extracted_json
+    req.status = "pending"
+    
+    # Reset all steps from the current stage index to pending
+    for s in req.approval_steps:
+        if s.stage_order >= req.current_stage_index:
+            s.status = "pending"
+            s.resolved_at = None
+            s.entered_at = datetime.utcnow() # Reset SLA timer
+
+    db.add(models.AuditLog(request_id=req.id, actor_role=action.actor_role, action="resubmitted", notes="Applicant revised details"))
+    db.commit()
+    db.refresh(req)
+    return req
+
+
 @router.get("/{request_id}/sla_status")
 def sla_status(request_id: int, db: Session = Depends(get_db)):
     req = db.query(models.Request).get(request_id)
