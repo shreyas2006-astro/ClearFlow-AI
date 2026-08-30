@@ -67,6 +67,7 @@ export function Navigation() {
                   <option value="hod1">HOD</option>
                   <option value="dean1">Dean SWO</option>
                   <option value="deanrd1">Dean R&D</option>
+                  <option value="director1">Director</option>
                 </select>
               </div>
             )}
