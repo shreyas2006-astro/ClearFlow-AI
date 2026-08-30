@@ -18,7 +18,7 @@ load_dotenv()  # reads .env in the repo root, so GEMINI_API_KEY doesn't need man
 # but is currently under heavy public load (every test call failed 3x before falling back) —
 # not worth the 7s of visible retry delay live in front of judges. Swap order back once
 # 3.7 demand settles, or just before the final demo if you want to double check.
-MODEL_FALLBACK_CHAIN = ["gemini-3.6-flash", "gemini-3.7-flash"]
+MODEL_FALLBACK_CHAIN = ["gemini-3.1-flash-lite"]
 MAX_RETRIES_PER_MODEL = 3
  
 SCHEMA_HINT = """{

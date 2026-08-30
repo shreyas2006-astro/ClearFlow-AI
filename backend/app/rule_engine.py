@@ -19,6 +19,11 @@ def resolve_route(request_type: str, extracted: dict, rules: dict) -> list[str]:
     candidates = rules.get(request_type, [])
     context = {"budget": extracted.get("budget_amount") or 0}
 
+    if not candidates:
+        print(f"[rule_engine] WARNING: no rules found for request_type={request_type!r} "
+              f"(known types: {list(rules.keys())}) — falling back to ['hod']")
+        return ["hod"]
+
     for rule in candidates:
         cond = rule["if"]
         if cond == "always":
@@ -27,4 +32,6 @@ def resolve_route(request_type: str, extracted: dict, rules: dict) -> list[str]:
         if eval(cond, {"__builtins__": {}}, context):
             return rule["route"]
 
+    print(f"[rule_engine] WARNING: request_type={request_type!r} had rules but none matched "
+          f"context={context} — falling back to ['hod']")
     return ["hod"]  # fallback if nothing matches
