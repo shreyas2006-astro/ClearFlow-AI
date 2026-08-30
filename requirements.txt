@@ -1,17 +1,23 @@
-fastapi==0.115.0
-uvicorn[standard]==0.30.6
-sqlalchemy==2.0.35
-pydantic==2.9.2
-pyyaml==6.0.2
-python-docx==1.1.2
-pymupdf==1.24.10
-python-multipart==0.0.9
-streamlit==1.39.0
+# Version floors, not exact pins — you're on Python 3.14, which is very new, so exact
+# pins from 2024 may predate that platform's wheel support (this is what broke pymupdf).
+# Floors below are known to have Python 3.14 wheels; pip will resolve compatible latest.
 
-# LLM client — uncomment whichever you have an API key for
-anthropic==0.34.2
-# openai==1.51.0
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.6
+sqlalchemy>=2.0.36
+pydantic>=2.10.0
+pyyaml>=6.0.2
+python-docx>=1.1.2
+pymupdf>=1.27.1
+python-multipart>=0.0.9
+streamlit>=1.39.0
+python-dotenv>=1.0.1
+
+# LLM client
+google-genai>=1.21.1
+# anthropic>=0.34.2  # uncomment if switching back
+# openai>=1.51.0
 
 # Optional, only if attempting the OCR stretch goal
-# pytesseract==0.3.13
-# pdf2image==1.17.0
+# pytesseract>=0.3.13
+# pdf2image>=1.17.0
