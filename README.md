@@ -49,7 +49,8 @@ uvicorn backend.app.main:app --reload --port 8000
 # Swagger UI at http://localhost:8000/docs
 
 # in a second terminal, run frontend
-streamlit run frontend/streamlit_app.py
+cd frontend-react
+npm run dev
 ```
 
 ## Team
