@@ -1,0 +1,13 @@
+NITK Surathkal - Technical Club Event Proposal
+
+Event Name: Robotics Workshop 2026
+Requesting Club: IEEE Robotics and Automation Society, NITK
+Faculty Advisor: Dr. Kamath, Department of Mechanical Engineering
+Proposed Venue: Seminar Hall, Mechanical Engineering Block
+Proposed Date: 15th October 2026
+Estimated Budget: Rs. 8,000
+Purpose: A hands-on workshop covering ROS basics and quadruped robot control for
+second and third year students.
+
+Approved by Faculty Advisor: Yes
+Attachments: budget breakdown, venue booking confirmation
